@@ -1,0 +1,13 @@
+Metadata-Version: 2.1
+Name: igor.py
+Version: 0.9.1
+Summary: Read Igor Pro files from python
+Home-page: https://github.com/reflectometry/igor.py
+Author: Paul Kienzle
+Author-email: paul.kienzle@nist.gov
+Classifier: Development Status :: 4 - Beta
+Classifier: Environment :: Console
+Classifier: Intended Audience :: Science/Research
+Classifier: License :: Public Domain
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python
