@@ -220,14 +220,14 @@ class Wave(IgorObject):
 
         if _type == 0:
             text = data[pos:extra_offset]
-            textind = numpy.fromstring(data[-textindsize:], order + "i")
+            textind = numpy.frombuffer(data[-textindsize:], order + "i")
             textind = numpy.hstack((0, textind))
             value = [text[textind[i] : textind[i + 1]] for i in range(len(textind) - 1)]
         else:
             trimdims = tuple(d for d in dims if d)
             dtype = order + ORDER_NUMTYPE[_type]
             size = int(dtype[2:]) * numpy.prod(trimdims)
-            value = numpy.fromstring(data[pos : pos + size], dtype)
+            value = numpy.frombuffer(data[pos : pos + size], dtype)
             value = value.reshape(trimdims)
 
         pos = extra_offset
@@ -457,7 +457,7 @@ def load(filename, ignore_unknown=True):
 
 # ============== Variable parsing ==============
 def _parse_sys_numeric(n, order, data, pos):
-    values = numpy.fromstring(data[pos : pos + n * 4], order + "f")
+    values = numpy.frombuffer(data[pos : pos + n * 4], order + "f")
     pos += n * 4
     var = dict(("K" + str(i), v) for i, v in enumerate(values))
     return var, pos
