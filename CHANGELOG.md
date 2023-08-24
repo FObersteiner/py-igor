@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## 0.1.0 2023-08-24 FObersteiner
+## 0.10.0 2023-08-24 FObersteiner
 
 - revised to work with Python 3 and current numpy version
 
