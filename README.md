@@ -10,7 +10,7 @@ from `https://github.com/reflectometry/igor.py`
 
 ## Note
 
-This package has been superseded by `igor <http://pypi.python.org/pypi/igor>`\_.
+This package has been superseded by [igor](http://pypi.python.org/pypi/igor).
 
 Use the new igor package with the following to get the same interface::
 
