@@ -267,7 +267,7 @@ class Wave(IgorObject):
         return self.data
 
     def __repr__(self):
-        return self.__str__()
+        return self.data.__repr__()
 
 
 class Recreation(IgorObject):
