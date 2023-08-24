@@ -1,4 +1,12 @@
-# original readme from `https://github.com/reflectometry/igor.py`:
+# pyigor
+
+forked from reflectometry/igor.py
+
+---
+
+# Original readme
+
+from `https://github.com/reflectometry/igor.py`
 
 ## Note
 
