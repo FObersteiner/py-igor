@@ -1,5 +1,5 @@
 from importlib import metadata
 
-from .pyigor import *
+from .igor import *
 
 __version__ = metadata.version("pyigor")
