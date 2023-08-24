@@ -1,4 +1,5 @@
-# This program is in the public domain
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """
 IGOR file reader.
 
@@ -11,10 +12,9 @@ Folders have name, path and children.
 Children can be indexed by folder[i] or by folder['name'].
 To see the whole tree, use: print folder.format()
 
-The usual igor folder types are given in the technical reports
-PTN003.ifn and TN003.ifn.
+The usual igor folder types are given in the technical reports PTN003.ifn and TN003.ifn.
 """
-__version__ = "0.9.1"
+__version__ = "0.10.0"
 
 import re
 import struct
