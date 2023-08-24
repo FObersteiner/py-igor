@@ -14,8 +14,6 @@ To see the whole tree, use: print folder.format()
 
 The usual igor folder types are given in the technical reports PTN003.ifn and TN003.ifn.
 """
-__version__ = "0.10.0"
-
 import re
 import struct
 import sys

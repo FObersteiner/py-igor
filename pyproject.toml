@@ -1,0 +1,48 @@
+[tool.poetry]
+name = "pyigor"
+version = "0.10.0"
+description = "Read Igor Pro files in Python"
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Environment :: Console",
+  "Intended Audience :: Science/Research",
+  "License :: Public Domain",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python",
+]
+py_modules = ["igor"]
+authors = [
+  "Paul Kienzle <paul.kienzle@nist.gov>",
+  "Florian Obersteiner <f.obersteiner@kit.edu>",
+]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+numpy = ">= 1.18"
+
+[tool.poetry.dev-dependencies]
+pytest = ">=7.0"
+black = ">=22.0"
+flake8 = ">=6.0"
+ruff = ">= 0.0.254"
+jupyter_core = ">=4.0"
+sphinx-autoapi = ">=2.0"
+sphinx-rtd-theme = ">=1.0"
+myst-nb = ">=0.17"
+
+[tool.black]
+line-length = 100
+target-version = ["py39", "py310", "py311"]
+
+[tool.ruff] # https://github.com/charliermarsh/ruff
+ignore = ["E501"]             # use defaults otherwise
+extend-select = ["C4", "SIM"]
+# "C4" : comprehensions
+# "TCH" : type checking optimizations
+# "SIM" : code simplifications
+target-version = "py39"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

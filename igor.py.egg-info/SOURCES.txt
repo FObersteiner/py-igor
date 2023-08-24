@@ -1,7 +1,0 @@
-README.rst
-igor.py
-setup.py
-igor.py.egg-info/PKG-INFO
-igor.py.egg-info/SOURCES.txt
-igor.py.egg-info/dependency_links.txt
-igor.py.egg-info/top_level.txt
