@@ -25,37 +25,35 @@ def decode(s):
     return s.decode(sys.getfilesystemencoding())
 
 
-PYKEYWORDS = set(
-    (
-        "and",
-        "as",
-        "assert",
-        "break",
-        "class",
-        "continue",
-        "def",
-        "elif",
-        "else",
-        "except",
-        "exec",
-        "finally",
-        "for",
-        "global",
-        "if",
-        "import",
-        "in",
-        "is",
-        "lambda",
-        "or",
-        "pass",
-        "print",
-        "raise",
-        "return",
-        "try",
-        "with",
-        "yield",
-    )
-)
+PYKEYWORDS = {
+    "and",
+    "as",
+    "assert",
+    "break",
+    "class",
+    "continue",
+    "def",
+    "elif",
+    "else",
+    "except",
+    "exec",
+    "finally",
+    "for",
+    "global",
+    "if",
+    "import",
+    "in",
+    "is",
+    "lambda",
+    "or",
+    "pass",
+    "print",
+    "raise",
+    "return",
+    "try",
+    "with",
+    "yield",
+}
 PYID = re.compile(r"^[^\d\W]\w*$", re.UNICODE)
 
 
@@ -457,7 +455,7 @@ def load(filename, ignore_unknown=True):
 def _parse_sys_numeric(n, order, data, pos):
     values = numpy.frombuffer(data[pos : pos + n * 4], order + "f")
     pos += n * 4
-    var = dict(("K" + str(i), v) for i, v in enumerate(values))
+    var = {"K" + str(i): v for i, v in enumerate(values)}
     return var, pos
 
 

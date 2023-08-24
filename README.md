@@ -1,4 +1,6 @@
-# Note
+# original readme from `https://github.com/reflectometry/igor.py`:
+
+## Note
 
 This package has been superseded by `igor <http://pypi.python.org/pypi/igor>`\_.
 
@@ -6,14 +8,14 @@ Use the new igor package with the following to get the same interface::
 
     import igor.igorpy as igor
 
-## Igor.py
+### Igor.py
 
-:Author: Paul Kienzle <paul.kienzle@nist.gov>
-:License: This program is public domain
+Author: Paul Kienzle <paul.kienzle@nist.gov>
+License: This program is public domain
 
 Read Igor Pro files from python.
 
-## Install
+### Install
 
 Using pip::
 
@@ -24,7 +26,7 @@ directory and type::
 
     $ python setup.py install
 
-## Change History
+### Change History
 
 0.9.1 2015-09-11
 
@@ -41,7 +43,7 @@ directory and type::
 
 - initial release
 
-## Maintenance
+### Maintenance
 
 When a new version of the package is ready, increment **version**
 in igor.py and enter::
