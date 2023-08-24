@@ -189,11 +189,11 @@ class Wave(IgorObject):
         extra_offset += pos
 
         if version in (1, 2, 3):
-            (type,) = struct.unpack(order + "h", data[pos : pos + 2])
-            name = data[pos + 6 : data.find(chr(0), pos + 6, pos + 26)]
+            (_type,) = struct.unpack(order + "h", data[pos : pos + 2])
+            name = data[pos + 6 : data.find(0, pos + 6, pos + 26)]
             # print "name3",name,type
-            data_units = data[pos + 34 : data.find(chr(0), pos + 34, pos + 38)]
-            xaxis = data[pos + 38 : data.find(chr(0), pos + 38, pos + 42)]
+            data_units = data[pos + 34 : data.find(0, pos + 34, pos + 38)]
+            xaxis = data[pos + 38 : data.find(0, pos + 38, pos + 42)]
             (points,) = struct.unpack(order + "i", data[pos + 42 : pos + 46])
             hsA, hsB = struct.unpack(order + "dd", data[pos + 48 : pos + 64])
             fsValid, fsTop, fsBottom = struct.unpack(order + "hdd", data[pos + 70 : pos + 88])
@@ -203,29 +203,29 @@ class Wave(IgorObject):
             sf = (hsA, 0, 0, 0, hsB, 0, 0, 0)
             axis_units = (xaxis, "", "", "")
         else:  # version is 5
-            created, modified, points, type = struct.unpack(
+            created, modified, points, _type = struct.unpack(
                 order + "IIih", data[pos + 4 : pos + 18]
             )
-            name = data[pos + 28 : data.find(chr(0), pos + 28, pos + 60)]
+            name = data[pos + 28 : data.find(0, pos + 28, pos + 60)]
             # print "name5",name,type
             dims = struct.unpack(order + "iiii", data[pos + 68 : pos + 84])
             sf = struct.unpack(order + "dddddddd", data[pos + 84 : pos + 148])
-            data_units = data[pos + 148 : data.find(chr(0), pos + 148, pos + 152)]
+            data_units = data[pos + 148 : data.find(0, pos + 148, pos + 152)]
             axis_units = tuple(
-                data[pos + 152 + 4 * i : data.find(chr(0), pos + 152 + 4 * i, pos + 156 + 4 * i)]
+                data[pos + 152 + 4 * i : data.find(0, pos + 152 + 4 * i, pos + 156 + 4 * i)]
                 for i in range(4)
             )
             fsValid, _, fsTop, fsBottom = struct.unpack(order + "hhdd", data[pos + 172 : pos + 192])
             pos += 320
 
-        if type == 0:
+        if _type == 0:
             text = data[pos:extra_offset]
             textind = numpy.fromstring(data[-textindsize:], order + "i")
             textind = numpy.hstack((0, textind))
             value = [text[textind[i] : textind[i + 1]] for i in range(len(textind) - 1)]
         else:
             trimdims = tuple(d for d in dims if d)
-            dtype = order + ORDER_NUMTYPE[type]
+            dtype = order + ORDER_NUMTYPE[_type]
             size = int(dtype[2:]) * numpy.prod(trimdims)
             value = numpy.fromstring(data[pos : pos + size], dtype)
             value = value.reshape(trimdims)
@@ -258,10 +258,10 @@ class Wave(IgorObject):
 
     def format(self, indent=0):
         if isinstance(self.data, list):
-            type, size = "text", "%d" % len(self.data)
+            _type, size = "text", "%d" % len(self.data)
         else:
-            type, size = "data", "x".join(str(d) for d in self.data.shape)
-        return " " * indent + "%s %s (%s)" % (self.name, type, size)
+            _type, size = "data", "x".join(str(d) for d in self.data.shape)
+        return " " * indent + "%s %s (%s)" % (self.name, _type, size)
 
     def __array__(self):
         return self.data
@@ -328,12 +328,12 @@ class Unknown(IgorObject):
     Record type not documented in PTN003/TN003.
     """
 
-    def __init__(self, data, order, type):
+    def __init__(self, data, order, _type):
         self.data = data
-        self.type = type
+        self._type = _type
 
     def format(self, indent=0):
-        return " " * indent + "<Unknown type %s>" % self.type
+        return " " * indent + "<Unknown type %s>" % self._type
 
 
 class _FolderStart(IgorObject):
@@ -342,7 +342,7 @@ class _FolderStart(IgorObject):
     """
 
     def __init__(self, data, order):
-        self.name = decode(data[: data.find(chr(0))])
+        self.name = decode(data[: data.find(0)])
 
 
 class _FolderEnd(IgorObject):
@@ -420,10 +420,8 @@ def loads(s, ignore_unknown=True):
     while pos < max:
         if pos + 8 > max:
             raise IOError("invalid record header; bad pxp file?")
-        print(type(s))
-        print(type(s[pos]))
-        ignore = ord(s[pos]) & 0x80
-        order = "<" if ord(s[pos]) & 0x77 else ">"
+        ignore = s[pos] & 0x80
+        order = "<" if s[pos] & 0x77 else ">"
         _type, _, length = struct.unpack(order + "hhi", s[pos : pos + 8])
         pos += 8
         if pos + length > len(s):
@@ -437,7 +435,7 @@ def loads(s, ignore_unknown=True):
             elif ignore_unknown:
                 continue
             else:
-                record = Unknown(data=data, order=order, type=type)
+                record = Unknown(data=data, order=order, _type=_type)
             if isinstance(record, _FolderStart):
                 path = stack[-1].path + [record.name]
                 folder = Folder(path)
@@ -468,8 +466,8 @@ def _parse_sys_numeric(n, order, data, pos):
 def _parse_user_numeric(n, order, data, pos):
     var = {}
     for i in range(n):
-        name = data[pos : data.find(chr(0), pos, pos + 32)]
-        type, numtype, real, imag = struct.unpack(order + "hhdd", data[pos + 32 : pos + 52])
+        name = data[pos : data.find(0, pos, pos + 32)]
+        _type, numtype, real, imag = struct.unpack(order + "hhdd", data[pos + 32 : pos + 52])
         dtype = NUMTYPE[numtype]
         if dtype in (numpy.complex64, numpy.complex128):
             value = dtype(real + 1j * imag)
@@ -483,8 +481,8 @@ def _parse_user_numeric(n, order, data, pos):
 def _parse_dep_numeric(n, order, data, pos):
     var = {}
     for i in range(n):
-        name = data[pos : data.find(chr(0), pos, pos + 32)]
-        type, numtype, real, imag = struct.unpack(order + "hhdd", data[pos + 32 : pos + 52])
+        name = data[pos : data.find(0, pos, pos + 32)]
+        _type, numtype, real, imag = struct.unpack(order + "hhdd", data[pos + 32 : pos + 52])
         dtype = NUMTYPE[numtype]
         if dtype in (numpy.complex64, numpy.complex128):
             value = dtype(real + 1j * imag)
@@ -499,7 +497,7 @@ def _parse_dep_numeric(n, order, data, pos):
 def _parse_dep_string(n, order, data, pos):
     var = {}
     for i in range(n):
-        name = data[pos : data.find(chr(0), pos, pos + 32)]
+        name = data[pos : data.find(0, pos, pos + 32)]
         (length,) = struct.unpack(order + "h", data[pos + 48 : pos + 50])
         var[name] = Formula(data[pos + 50 : pos + 50 + length - 1], "")
         pos += 50 + length
@@ -509,7 +507,7 @@ def _parse_dep_string(n, order, data, pos):
 def _parse_user_string1(n, order, data, pos):
     var = {}
     for i in range(n):
-        name = data[pos : data.find(chr(0), pos, pos + 32)]
+        name = data[pos : data.find(0, pos, pos + 32)]
         (length,) = struct.unpack(order + "h", data[pos + 32 : pos + 34])
         value = data[pos + 34 : pos + 34 + length]
         pos += 34 + length
@@ -520,7 +518,7 @@ def _parse_user_string1(n, order, data, pos):
 def _parse_user_string2(n, order, data, pos):
     var = {}
     for i in range(n):
-        name = data[pos : data.find(chr(0), pos, pos + 32)]
+        name = data[pos : data.find(0, pos, pos + 32)]
         (length,) = struct.unpack(order + "i", data[pos + 32 : pos + 36])
         value = data[pos + 36 : pos + 36 + length]
         pos += 36 + length
