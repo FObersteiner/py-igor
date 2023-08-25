@@ -370,7 +370,9 @@ class Folder(IgorObject):
             raise KeyError("Folder %s does not exist" % key)
 
     def __str__(self):
-        return "<igor.Folder %s>" % "/".join(self.path)
+        _repr = ["<igor.Folder>"]
+        _repr += ["path:", "/".join(self.path)]
+        return "\n".join(_repr)
 
     __repr__ = __str__
 
